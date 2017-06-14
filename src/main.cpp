@@ -25,20 +25,12 @@
 // SSD1306Brzo display(0x3c, D1, D2);
 
 // Chip name
-String chipName = "two";
-
-// WIFI
-const char *host = chipName.c_str();
-
+String chipName = "three";
 
 // DHT sensor settings
 #define DHTPIN 2     // what digital pin we're connected to
 #define DHTTYPE DHT22 // DHT 22  (AM2302), AM2321
 DHT dht(DHTPIN, DHTTYPE);
-
-
-// Baud
-const int baud = 115200;
 
 // Host
 char *nasHost = "10.0.0.2";
@@ -54,45 +46,14 @@ void DHTSenserPost();
 void DHTSenserUpdate();
 String getSensorsJson();
 
-
 void setup() {
-  // Serial
-  Serial.begin(baud);
-
-  // connect wifi & OTA init
+  // connect wifi
   WiFi.mode(WIFI_STA);
   WiFi.begin(ssid, password);
-  if (WiFi.waitForConnectResult() == WL_CONNECTED) {
-    Serial.println("WiFi Ready");
-  } else {
-    Serial.println("WiFi Failed");
-  }
+  WiFi.waitForConnectResult();
 
-  Serial.println("");
-  Serial.println("WiFi connected");
-
-  // OTA
-  ArduinoOTA.onStart([]() { Serial.println("Start"); });
-  ArduinoOTA.onEnd([]() { Serial.println("\nEnd"); });
-  ArduinoOTA.onProgress([](unsigned int progress, unsigned int total) {
-    Serial.printf("Progress: %u%%\r", (progress / (total / 100)));
-  });
-  ArduinoOTA.onError([](ota_error_t error) {
-    Serial.printf("Error[%u]: ", error);
-    if (error == OTA_AUTH_ERROR)
-      Serial.println("Auth Failed");
-    else if (error == OTA_BEGIN_ERROR)
-      Serial.println("Begin Failed");
-    else if (error == OTA_CONNECT_ERROR)
-      Serial.println("Connect Failed");
-    else if (error == OTA_RECEIVE_ERROR)
-      Serial.println("Receive Failed");
-    else if (error == OTA_END_ERROR)
-      Serial.println("End Failed");
-  });
+  // OTA handle
   ArduinoOTA.begin();
-
-  // Print the IP address
   delay(500);
   for(int whileCount = 0;whileCount < 10;++whileCount){
       ArduinoOTA.handle();
@@ -101,32 +62,10 @@ void setup() {
 
   DHTSenserUpdate();
   DHTSenserPost();
+  ESP.deepSleep(10 * 60 * 1000 * 1000 - (20 * 1000 * 1000)); //-20s
 }
 
 void loop() {
-    // Serial.println("loop");
-    // delay(1000);
-  // OTA
-  // ArduinoOTA.handle();
-  // DHTServerResponse();
-  //
-  // // Use WiFiClient class to create TCP connections
-  // if (millis() - timeSinceLastHttpRequest >= 599990) {
-  delay(599990);
-  DHTSenserUpdate();
-  DHTSenserPost();
-
-  //   timeSinceLastHttpRequest = millis();
-  // }
-  //
-  // // if(millis() - timeSinceLastDHT >= 10000){
-    // DHTSenserUpdate();
-    // timeSinceLastDHT = millis();
-  // // }
-  // Serial.println("test");
-  // delay(10000);
-  // Serial.println("ESP8266 in sleep mode");
-  // ESP.deepSleep(10000000);
 }
 
 void DHTSenserUpdate() {
@@ -165,7 +104,6 @@ void DHTSenserPost() {
   }
 }
 
-
 // sensors json
 String getSensorsJson() {
   float h = humidity;
@@ -183,6 +121,8 @@ String getSensorsJson() {
   res += (String)h;
   res += ",\"chip\": \"";
   res += chipName;
+  res += ",\"ip\": \"";
+  res += WiFi.localIP().toString();
   res += "\"}";
 
   return res;
