@@ -19,10 +19,6 @@
 // static const uint8_t D8   = 15;
 // static const uint8_t RX   = 3;
 // static const uint8_t TX   = 1;
-// Initialize the OLED display using brzo_i2c
-// D1 -> SDA
-// D2 -> SCL
-// SSD1306Brzo display(0x3c, D1, D2);
 
 // Chip name
 String chipName = "three";
