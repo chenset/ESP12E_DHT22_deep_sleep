@@ -23,6 +23,9 @@
 // Chip name
 String chipName = "three";
 
+// Deep sleep time
+int sleepTime = 590000000;
+
 // DHT sensor settings
 #define DHTPIN 2     // what digital pin we're connected to
 #define DHTTYPE DHT22 // DHT 22  (AM2302), AM2321
@@ -58,7 +61,7 @@ void setup() {
 
   DHTSenserUpdate();
   DHTSenserPost();
-  ESP.deepSleep(10 * 60 * 1000 * 1000 - (20 * 1000 * 1000)); //-20s
+  ESP.deepSleep(sleepTime);
 }
 
 void loop() {
@@ -73,7 +76,6 @@ void DHTSenserUpdate() {
   }
 
   if (localHumidity != 0.00 || localTemperature != 0.00) {
-    //偏差修正
     humidity = localHumidity - 5.0;
     temperature = localTemperature;
   }
