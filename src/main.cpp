@@ -27,7 +27,7 @@ String chipName = "three";
 int sleepTime = 590000000;
 
 // DHT sensor settings
-#define DHTPIN 2     // what digital pin we're connected to
+#define DHTPIN 5     // what digital pin we're connected to
 #define DHTTYPE DHT22 // DHT 22  (AM2302), AM2321
 DHT dht(DHTPIN, DHTTYPE);
 
@@ -53,10 +53,9 @@ void setup() {
 
   // OTA handle
   ArduinoOTA.begin();
-  delay(500);
-  for(int whileCount = 0;whileCount < 10;++whileCount){
+  for(int whileCount = 0;whileCount < 100;++whileCount){
       ArduinoOTA.handle();
-      delay(1000);
+      delay(100);
   }
 
   DHTSenserUpdate();
@@ -119,7 +118,7 @@ String getSensorsJson() {
   res += (String)h;
   res += ",\"chip\": \"";
   res += chipName;
-  res += ",\"ip\": \"";
+  res += "\",\"ip\": \"";
   res += WiFi.localIP().toString();
   res += "\"}";
 
