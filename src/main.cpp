@@ -1,7 +1,7 @@
-#include <ArduinoOTA.h>
+// #include <ArduinoOTA.h>
 #include <DHT.h>
 #include <ESP8266WiFi.h>
-#include <ESP8266mDNS.h>
+// #include <ESP8266mDNS.h>
 #include <WiFiClient.h>
 #include <ESP8266HTTPClient.h>
 
@@ -53,12 +53,14 @@ void setup() {
 
   dht.begin();
 
-  // OTA handle
-  ArduinoOTA.begin();
-  for(int whileCount = 0;whileCount < 100; ++whileCount){
-      ArduinoOTA.handle();
-      delay(100);
-  }
+  // // OTA handle
+  // ArduinoOTA.begin();
+  // for(int whileCount = 0;whileCount < 100; ++whileCount){
+  //     ArduinoOTA.handle();
+  //     delay(100);
+  // }
+  
+  delay(3000);
 
   DHTSenserUpdate();
   DHTSenserPost();
