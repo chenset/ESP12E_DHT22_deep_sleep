@@ -51,9 +51,11 @@ void setup() {
   WiFi.begin(ssid, password);
   WiFi.waitForConnectResult();
 
+  dht.begin();
+
   // OTA handle
   ArduinoOTA.begin();
-  for(int whileCount = 0;whileCount < 100;++whileCount){
+  for(int whileCount = 0;whileCount < 100; ++whileCount){
       ArduinoOTA.handle();
       delay(100);
   }
