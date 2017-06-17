@@ -1,9 +1,12 @@
-// #include <ArduinoOTA.h>
+#include <ArduinoOTA.h>
 #include <DHT.h>
 #include <ESP8266WiFi.h>
-// #include <ESP8266mDNS.h>
+#include <ESP8266mDNS.h>
 #include <WiFiClient.h>
 #include <ESP8266HTTPClient.h>
+extern "C" {
+  #include "user_interface.h"
+}
 
 //only define const char *ssid & const char *password in env.h
 #include "env.h"
@@ -25,6 +28,7 @@ String chipName = "three";
 
 // Deep sleep time
 int sleepTime = 590000000;
+// int sleepTime = 5000000;
 
 // DHT sensor settings
 #define DHTPIN 5     // what digital pin we're connected to
@@ -52,15 +56,18 @@ void setup() {
   WiFi.waitForConnectResult();
 
   dht.begin();
+  rst_info *resetInfo;
+  resetInfo = ESP.getResetInfoPtr();
 
-  // // OTA handle
-  // ArduinoOTA.begin();
-  // for(int whileCount = 0;whileCount < 100; ++whileCount){
-  //     ArduinoOTA.handle();
-  //     delay(100);
-  // }
-  
-  delay(3000);
+  if(resetInfo->reason == REASON_DEFAULT_RST || resetInfo->reason == REASON_EXT_SYS_RST){
+    ArduinoOTA.begin();
+    for(int whileCount = 0;whileCount < 150; ++whileCount){
+        ArduinoOTA.handle();
+        delay(100);
+    }
+
+    ESP.restart();
+  }
 
   DHTSenserUpdate();
   DHTSenserPost();
