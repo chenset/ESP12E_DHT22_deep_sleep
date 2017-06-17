@@ -73,6 +73,7 @@ void setup() {
     ESP.restart();
   }
 
+  delay(3000);
   DHTSenserUpdate();
   DHTSenserPost();
   ESP.deepSleep(sleepTime);
