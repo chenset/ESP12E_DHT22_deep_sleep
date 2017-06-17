@@ -49,6 +49,8 @@ void DHTSenserPost();
 void DHTSenserUpdate();
 String getSensorsJson();
 
+int resetStatus = -1;
+
 void setup() {
   // connect wifi
   WiFi.mode(WIFI_STA);
@@ -58,7 +60,9 @@ void setup() {
   dht.begin();
   rst_info *resetInfo;
   resetInfo = ESP.getResetInfoPtr();
+  resetStatus = resetInfo->reason;
 
+  //OAT
   if(resetInfo->reason == REASON_DEFAULT_RST || resetInfo->reason == REASON_EXT_SYS_RST){
     ArduinoOTA.begin();
     for(int whileCount = 0;whileCount < 150; ++whileCount){
@@ -131,6 +135,8 @@ String getSensorsJson() {
   res += chipName;
   res += "\",\"ip\": \"";
   res += WiFi.localIP().toString();
+  res += "\",\"reset\": \"";
+  res += (String)resetStatus;
   res += "\"}";
 
   return res;
