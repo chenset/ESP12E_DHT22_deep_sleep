@@ -24,7 +24,7 @@ extern "C" {
 // static const uint8_t TX   = 1;
 
 // Chip name
-String chipName = "three";
+String chipName = "two";
 
 // Deep sleep time
 int sleepTime = 590000000;
@@ -90,7 +90,7 @@ void DHTSenserUpdate() {
   }
 
   if (localHumidity != 0.00 || localTemperature != 0.00) {
-    humidity = localHumidity - 5.0;
+    humidity = localHumidity;
     temperature = localTemperature;
   }
 }
